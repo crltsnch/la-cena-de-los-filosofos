@@ -31,4 +31,19 @@ class filosofo(threading.Thread):
     def izquierda(self, i):
         return (i+1)%N   #lo mismo que la funcion derecha, pero para el tenedor de la izquierda
     
-   
+    def verificar(self, i):
+        if filosofo.estado[i] == 'HAMBRIENTO' and filosofo.estado[self.izquierda(i)] != 'COMIENDO' and filosofo.estado[self.derecha(i)] != 'COMIENDO':   #si el filosofo (el que está ejecutando el hilo) esta hambriento y los filosofos de su izquierda y derecha no estan comiendo, entonces el filosofo puede cambiar de estado a comiendo.
+            filosofo.estado[i] = 'COMIENDO'
+            filosofo.tenedores[i].release()   #se libera el semaforo del tenedor del filosofo i, es decir, el filosofo i puede tomar los tenedores.
+    
+    def tomar(self):
+        filosofo.semaforo.acquire()  #se adquiere el semaforo binario para asegurar la exclusión mutua entre filósofos al intentar tomar los tenedores. Si el filosofo esta comiendo, otro filosofo que quiera comer tendra que esperar.
+        filosofo.estado[self.id] = 'HAMBRIENTO'   #el filosofo cambia su estado a hambriento
+        self.verificar(self.id)   #se comprueba si el filosofo puede tomar ambos tenedores para comer
+        filosofo.semaforo.release()  #si puede comer, el filosofo libera el semáforo, deja de intentar tomar los tenedores y pasa a estar comeindo.
+        filosofo.tenedores[self.id].acquire()  #si puede tomarlos, el filósofo asquiere el bloqueo de ambos tenedores, ambos tenedores están disponibles y el filósofo puede comenzar a comer.
+    
+    def soltar(self):
+        filosofo.semaforo.acquire()  #infica que el filósofo comenzará a soltar los tenedores y se asegura de que ningun otro filósofo pueda acceder a ellos hasta que el actual termine de soltarlos.
+        filosofo.estado[self.id] = 'PENSANDO'   #el filosofo cambia su estado a pensando
+    
