@@ -46,4 +46,8 @@ class filosofo(threading.Thread):
     def soltar(self):
         filosofo.semaforo.acquire()  #infica que el filósofo comenzará a soltar los tenedores y se asegura de que ningun otro filósofo pueda acceder a ellos hasta que el actual termine de soltarlos.
         filosofo.estado[self.id] = 'PENSANDO'   #el filosofo cambia su estado a pensando
+        self.verificar((self.id + 1) % filosofo.n)  #se comprueba si el filosofo de la derecha puede comer, llamando a la función verificar. Si el id del filosofo de la derecha es n entonces pasamos al indice 0.
+        self.verificar((self.id - 1 + filosofo.n) % filosofo.n)  #igual que antes pero para el filosofo de la izquierda. Si el id del filosofo de la izquierda es -1 entonces pasamos al indice n-1.
+        filosofo.semaforo.release()  #el filosofo termina de soltar los tenedores y libera el semaforo para que otro filosofo pueda tomarlos, libera el acceso al recurso compartido.
+    
     
