@@ -19,4 +19,16 @@ class filosofo(threading.Thread):
         filosofo.tenedores.append(threading.Semaphore(0))   #se crea un semaforo para su tenedor izquierdo y se añade a la lista de tenedores
         print("Filosofo {0} - PENSANDO".format(self.id))   #mensaje en la consolo indicando que el filosofo esta pensando
     
+    def __del__(self):
+        print("Filosofo {0} - Se para de la mesa".format(self.id))  #este metodo se llama cuando el objeto de la clase filosofo se elimina de la memoria, es decir, cuando el hilo termina.
     
+    def pensar(self):
+        time.sleep(random.randint(0, 5))   #el filosofo piensa durante un tiempo aleatorio entre 0 y 5 segundos, esto lo necesitamos para que los filosofos tomen un tiempo antes de intentar coger los tenedores y, por tanto, evitar el bloqueo mutuo.
+    
+    def derecha(self, i):
+        return (i-1)%N   #devuelve el indice del filósofo que se encuentra a la derecha del filósofo 'i' en la mesa. Cuando el filosofo quiera tomar el tenedor de su derecha, necesita saber el filosofo que esta a su derecha para comprobar si este esta comiendo o no y por tanto saber si el fislofo i puede tomar el tenedor.
+    
+    def izquierda(self, i):
+        return (i+1)%N   #lo mismo que la funcion derecha, pero para el tenedor de la izquierda
+    
+   
