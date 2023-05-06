@@ -1,6 +1,6 @@
 # la cena de los filosofos
 
-El link a mi repositorio es: [GitHub (https://github.com/crltsnch/la-cena-de-los-filosofos)
+El link a mi repositorio es: [GitHub] (https://github.com/crltsnch/la-cena-de-los-filosofos)
 
 #Archivo `filosofos.py`
 
