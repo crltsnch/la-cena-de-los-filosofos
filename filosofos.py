@@ -20,13 +20,13 @@ class filosofo(threading.Thread):
         print("Filosofo {0} - PENSANDO".format(self.id))   #mensaje en la consolo indicando que el filosofo esta pensando
     
     def __del__(self):
-        print("Filosofo {0} - Se para de la mesa".format(self.id))  #este metodo se llama cuando el objeto de la clase filosofo se elimina de la memoria, es decir, cuando el hilo termina.
+        print("Filosofo {0} - Se para de la mesa".format(self.id))  #este metodo se llama cuando el objeto de la clase filosofo se elimina de la memoria, es decir, cuando el hilo termina
     
     def pensar(self):
-        time.sleep(random.randint(0, 5))   #el filosofo piensa durante un tiempo aleatorio entre 0 y 5 segundos, esto lo necesitamos para que los filosofos tomen un tiempo antes de intentar coger los tenedores y, por tanto, evitar el bloqueo mutuo.
+        time.sleep(random.randint(0, 5))   #el filosofo piensa durante un tiempo aleatorio entre 0 y 5 segundos, esto lo necesitamos para que los filosofos tomen un tiempo antes de intentar coger los tenedores y, por tanto, evitar el bloqueo mutuo
     
     def derecha(self, i):
-        return (i-1)%N   #devuelve el indice del filósofo que se encuentra a la derecha del filósofo 'i' en la mesa. Cuando el filosofo quiera tomar el tenedor de su derecha, necesita saber el filosofo que esta a su derecha para comprobar si este esta comiendo o no y por tanto saber si el fislofo i puede tomar el tenedor.
+        return (i-1)%N   #devuelve el indice del filósofo que se encuentra a la derecha del filósofo 'i' en la mesa. Cuando el filosofo quiera tomar el tenedor de su derecha, necesita saber el filosofo que esta a su derecha para comprobar si este esta comiendo o no y por tanto saber si el fislofo i puede tomar el tenedor
     
     def izquierda(self, i):
         return (i+1)%N   #lo mismo que la funcion derecha, pero para el tenedor de la izquierda
@@ -37,17 +37,22 @@ class filosofo(threading.Thread):
             filosofo.tenedores[i].release()   #se libera el semaforo del tenedor del filosofo i, es decir, el filosofo i puede tomar los tenedores.
     
     def tomar(self):
-        filosofo.semaforo.acquire()  #se adquiere el semaforo binario para asegurar la exclusión mutua entre filósofos al intentar tomar los tenedores. Si el filosofo esta comiendo, otro filosofo que quiera comer tendra que esperar.
+        filosofo.semaforo.acquire()  #se adquiere el semaforo binario para asegurar la exclusión mutua entre filósofos al intentar tomar los tenedores. Si el filosofo esta comiendo, otro filosofo que quiera comer tendra que esperar
         filosofo.estado[self.id] = 'HAMBRIENTO'   #el filosofo cambia su estado a hambriento
         self.verificar(self.id)   #se comprueba si el filosofo puede tomar ambos tenedores para comer
         filosofo.semaforo.release()  #si puede comer, el filosofo libera el semáforo, deja de intentar tomar los tenedores y pasa a estar comeindo.
-        filosofo.tenedores[self.id].acquire()  #si puede tomarlos, el filósofo asquiere el bloqueo de ambos tenedores, ambos tenedores están disponibles y el filósofo puede comenzar a comer.
+        filosofo.tenedores[self.id].acquire()  #si puede tomarlos, el filósofo asquiere el bloqueo de ambos tenedores, ambos tenedores están disponibles y el filósofo puede comenzar a comer
     
     def soltar(self):
-        filosofo.semaforo.acquire()  #infica que el filósofo comenzará a soltar los tenedores y se asegura de que ningun otro filósofo pueda acceder a ellos hasta que el actual termine de soltarlos.
+        filosofo.semaforo.acquire()  #infica que el filósofo comenzará a soltar los tenedores y se asegura de que ningun otro filósofo pueda acceder a ellos hasta que el actual termine de soltarlos
         filosofo.estado[self.id] = 'PENSANDO'   #el filosofo cambia su estado a pensando
-        self.verificar((self.id + 1) % filosofo.n)  #se comprueba si el filosofo de la derecha puede comer, llamando a la función verificar. Si el id del filosofo de la derecha es n entonces pasamos al indice 0.
-        self.verificar((self.id - 1 + filosofo.n) % filosofo.n)  #igual que antes pero para el filosofo de la izquierda. Si el id del filosofo de la izquierda es -1 entonces pasamos al indice n-1.
-        filosofo.semaforo.release()  #el filosofo termina de soltar los tenedores y libera el semaforo para que otro filosofo pueda tomarlos, libera el acceso al recurso compartido.
+        self.verificar((self.id + 1) % filosofo.n)  #se comprueba si el filosofo de la derecha puede comer, llamando a la función verificar. Si el id del filosofo de la derecha es n entonces pasamos al indice 0
+        self.verificar((self.id - 1 + filosofo.n) % filosofo.n)  #igual que antes pero para el filosofo de la izquierda. Si el id del filosofo de la izquierda es -1 entonces pasamos al indice n-1
+        filosofo.semaforo.release()  #el filosofo termina de soltar los tenedores y libera el semaforo para que otro filosofo pueda tomarlos, libera el acceso al recurso compartido
     
-    
+    def comer(self):
+        print("Filosofo {} comiendo".format(self.id))  #indica que el filósofo está comiendo
+        time.sleep(2)   #introduce un retraso enla ejecución simulando el tiempño que el filósofo necesita para comer, en este caso 2 segundos
+        print("Filosofo {} termina de comer".format(self.id))  #indica que el filósofo ha terminado de comer
+
+   
