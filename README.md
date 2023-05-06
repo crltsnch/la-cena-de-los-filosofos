@@ -2,7 +2,7 @@
 
 El link a mi repositorio es: [GitHub (https://github.com/crltsnch/la-cena-de-los-filosofos)
 
-#Archivo `filosofos.py``
+#Archivo `filosofos.py`
 
 ```
 import time
