@@ -55,4 +55,11 @@ class filosofo(threading.Thread):
         time.sleep(2)   #introduce un retraso enla ejecución simulando el tiempño que el filósofo necesita para comer, en este caso 2 segundos
         print("Filosofo {} termina de comer".format(self.id))  #indica que el filósofo ha terminado de comer
 
-   
+    def run(self):   #cuando se inicia un nuevo hilo
+        for i in range(tiempo_total):
+            self.pensar()   #el filósofo piensa
+            self.tomar()   #el filósofo toma los tenedores
+            self.comer()   #el filósofo come
+            self.soltar()   #el filósofo suelta los tenedores
+
+    
