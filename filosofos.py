@@ -62,4 +62,16 @@ class filosofo(threading.Thread):
             self.comer()   #el filósofo come
             self.soltar()   #el filósofo suelta los tenedores
 
+def main():
+    lista = []  #lista que almacena los filosofos
+    for i in range(N):
+        lista.append(filosofo())   #añadimos el filosofo a la lista
     
+    for f in lista:  #recorremos la lista de filosofos
+        f.start()  #se inicia el hilo del filosofo
+    
+    for f in lista:   
+        f.join()   #después de iniciar todos los hilos, esto asegura que todos los filósofos terminen de comer antes de que finalice el programa
+    
+if __name__ == "__main__":
+    main()
